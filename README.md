@@ -1,7 +1,15 @@
-crdt
+# CRDT - Commutative Replicated Data Types
 ========
 
 a CRDT library for Ruby
+
+Props to <a href="https://twitter.com/dominictarr">@dominctarr</a> 
+for being awesome and <a href="https://github.com/dominictarr/crdt">implementing</a>
+these things first so I could virtually stare over his shoulder.
+
+*(caveat, I give this about a 1 in 4 chance of just being a broken implementation)
+
+<a href="http://hal.upmc.fr/docs/00/55/55/88/PDF/techreport.pdf">Here</a> is a paper I probably sholud have studied more carefully.
 
 <table>
   <tr>
@@ -25,9 +33,7 @@ a CRDT library for Ruby
   <tr>
     <td>Is it any good?</td>
     <td>
-      <a href="https://codeclimate.com/github/collin/crdt">
-        <img src="https://codeclimate.com/badge.png">
-      </a>
+      Maybe Not?
     </td>
   </tr>
 </table>
