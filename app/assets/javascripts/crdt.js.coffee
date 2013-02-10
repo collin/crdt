@@ -1,6 +1,6 @@
 # WIRE FORMAT
 # OKAY WE'RE GOING OVER THE WIRE!
-@CRDT =
+window.CRDT =
   detect: (list, fn) ->
     for item in list
       return item if fn(item)

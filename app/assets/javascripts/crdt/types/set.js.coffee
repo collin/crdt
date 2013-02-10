@@ -2,28 +2,32 @@
 max = (list) -> Math.max.apply(null, list)
 last = (list) -> list[ list.length ]
 
-class CRDT.Set extends CRDT.Atom
-  class @AtomSet
-    constructor: ->
-      @atoms = new Object
-
-    add: (vector) ->
-      ( @atoms[vector.atom] ||= [] ).push vector.clock
-
-    at: (atom) -> @atoms[atom]
-
-    without: (other) ->
-      result = new Array
-      for atom, clocks of @atoms
-        otherAtom = other[atom] 
-        maxClock = max(clocks)
-        continue if otherAtom?[0] && max(otherAtom) > maxClock
-        result.push CRDT.Vector.new(atom, maxClock)
-      result
-
+class CRDT.AtomSet
   constructor: ->
-    @added = new AtomSet
-    @removed = new AtomSet
+    @atoms = new CRDT.Map
+
+  add: (vector) ->
+    unless clocks = @at(vector.atom)
+      clocks = []
+      @atoms.set(vector.atom, clocks)
+
+    clocks.push vector.clock
+
+  at: (atom) -> @atoms.get(atom)
+
+  without: (other) ->
+    result = new Array
+    @atoms.forEach (atom, clocks) ->
+      otherAtom = other.at(atom)
+      maxClock = max(clocks)
+      unless otherAtom?[0] && max(otherAtom) > maxClock
+        result.push new CRDT.Vector(atom, maxClock)
+    result
+
+class CRDT.Set extends CRDT.Atom
+  constructor: ->
+    @added = new CRDT.AtomSet
+    @removed = new CRDT.AtomSet
     
   add: (vector) -> @_add(vector)
   remove: (vector) -> @_remove(vector)
@@ -43,7 +47,7 @@ class CRDT.Set extends CRDT.Atom
     @integrationCache
 
   integrationCacheMiss: ->
-    @integrationCache ||= @added.without(removed)
+    @integrationCache ||= @added.without(@removed)
 
   dirty: -> @integrationCache = undefined
 

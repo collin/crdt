@@ -12,10 +12,10 @@ class CRDT.Array extends CRDT.Set
     compareTo: (other) ->
       @position.compareTo(other.position)
 
-    position:
+    position: ->
       detect @atoms(), (atom) -> atom.constructor is CRDT.Array.Position
 
-    atom:
+    atom: ->
       detect @atoms(), (atom) -> atom.constructor isnt CRDT.Array.Position
 
   class @Position extends CRDT.Atom
@@ -49,11 +49,11 @@ class CRDT.Array extends CRDT.Set
     atoms.indexOf(atom)
 
   _insert: (vector, before, after) ->
-    before = before ? before.atom.position().value : CRDT.Between.LOW
-    after = after ? after.atom.position().value : CRDT.Between.HIGH
+    before = if before then before.atom.position().value else Between.low
+    after = if after then after.atom.position().value else Between.high
 
-    sort = CRDT::Between.string(before, after)
-    sort += CRDT::Between.rand(3)
+    sort = Between.string(before, after)
+    sort += Between.rand(3)
 
     position = new CRDT.Array.Position(sort)
     member = new CRDT.Array.Member

@@ -7,7 +7,49 @@
 </head>
 <body>
   <div id="qunit"></div>
+  <script src="../vendor/coffee-script.js"></script>
   <script src="../vendor/qunit.js"></script>
-  <script src="tests.js"></script>
+
+  <script 
+    type="text/coffeescript" 
+    src="../app/assets/javascripts/crdt/between.js.coffee"
+  ></script>
+  <script 
+    type="text/coffeescript" 
+    src="../app/assets/javascripts/crdt.js.coffee"
+  ></script>
+  <script 
+    type="text/coffeescript" 
+    src="../app/assets/javascripts/crdt/map.js.coffee"
+  ></script>
+  <script 
+    type="text/coffeescript" 
+    src="../app/assets/javascripts/crdt/vector.js.coffee"
+  ></script>
+  <script 
+    type="text/coffeescript" 
+    src="../app/assets/javascripts/crdt/types/atom.js.coffee"
+  ></script>
+  <script 
+    type="text/coffeescript" 
+    src="../app/assets/javascripts/crdt/types/set.js.coffee"
+  ></script>
+  <script 
+    type="text/coffeescript" 
+    src="../app/assets/javascripts/crdt/types/array.js.coffee"
+  ></script>
+  <script 
+    type="text/coffeescript" 
+    src="../app/assets/javascripts/crdt/types/hash.js.coffee"
+  ></script>
+
+  <script type="text/coffeescript">
+    module "Test Harness"
+    test "Test Harness Runs", -> ok true, "Test Harness Runs"
+  </script>
+
+  <script type="text/coffeescript" src="crdt/between_test.js.coffee"></script>
+  <script type="text/coffeescript" src="crdt/types/atom.js.coffee"></script>
+  <script type="text/coffeescript" src="crdt/types/set.js.coffee"></script>
 </body>
 </html>

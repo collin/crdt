@@ -1,15 +1,33 @@
 window.Between = {}
-Between.chars = '!0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~'
+chars = '!0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~'
+Between.chars = chars
 Between.low = chars[0]
 Between.high = chars[-2]
 
 Between.generate = (left, right) ->
-  string = ''
+  _string = ''
   index = 0
 
   loop
-    _left = chars.indexOf left[index]
-    _right = chars.indexOf right[index]
+    _left = chars.indexOf( left[index] ) || 0
+    _right = chars.indexOf( right[index] ) || chars.length - 1
 
-    _a = 0 if _a is -1
-    _b = chars.length - 1 if _b is -1
+    index++
+
+    charIndex = if _left + 1 < _right
+        Math.round((_left + _right) / 2)
+      else
+        _left
+
+    char = chars[charIndex]
+    _string += char
+
+    if left < _string && _string < right && char != Between.low
+      return _string
+
+Between.rand = (length) ->
+  string = ""
+  while length > 0
+    length--
+    string += Between.chars[ Math.round Math.random(Between.chars.length) ]
+  string

@@ -10,3 +10,8 @@ desc "run specs"
 RSpec::Core::RakeTask.new do |t|
   t.pattern = "spec/**/*_spec.rb"
 end
+
+desc "run js tests"
+task "browser" do
+  sh "phantomjs vendor/qunit-phantomjs-runner.js test/suite.html"
+end
