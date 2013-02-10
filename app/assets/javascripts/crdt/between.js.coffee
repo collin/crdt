@@ -1,8 +1,9 @@
 window.Between = {}
 chars = '!0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~'
 Between.chars = chars
+Between.high = chars[chars.length - 1]
 Between.low = chars[0]
-Between.high = chars[-2]
+
 
 Between.generate = (left, right) ->
   _string = ''
@@ -29,5 +30,5 @@ Between.rand = (length) ->
   string = ""
   while length > 0
     length--
-    string += Between.chars[ Math.round Math.random(Between.chars.length) ]
+    string += Between.chars[ Math.round(Math.random() * Between.chars.length) ]
   string

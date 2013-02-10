@@ -2,7 +2,7 @@
 
 module "CRDT.Set"
 test "is an Atom", ->
-  equal CRDT.Set.__super__.constructor, CRDT.Atom
+  ok CRDT.Set.__super__.constructor is CRDT.Atom
 
 commute = (name, operations..., _test) ->
   all = permutations(operations)
