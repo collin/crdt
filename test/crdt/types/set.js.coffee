@@ -4,32 +4,38 @@ module "CRDT.Set"
 test "is an Atom", ->
   equal CRDT.Set.__super__.constructor, CRDT.Atom
 
-test "adding atoms", ->
-  subject = new CRDT.Set
-  atom = new CRDT.Atom "atom1"
-  subject.add new CRDT.Vector atom, 1
-  ok CRDT.include(subject.atoms(), atom), "subject atoms include atom1"
+commute = (name, operations..., _test) ->
+  all = permutations(operations)
+  for permutation, index in all
+    do (permutation, index) ->
+      test "#{name} ( permutation #{index + 1}/#{all.length} )", ->
+        operation() for operation in permutation
+        _test()
 
-test "removes atoms", ->
-  subject = new CRDT.Set
-  atom = new CRDT.Atom "atom1"
-  subject.add new CRDT.Vector(atom, 1)
-  subject.remove new CRDT.Vector(atom, 2)
-  ok not(CRDT.include(subject.atoms(), atom)), "atom removal commutes"
+atom = new CRDT.Atom "atom1"
+atom2 = new CRDT.Atom "atom2"
 
-test "ties go to addition", ->
-  subject = new CRDT.Set
-  atom = new CRDT.Atom "atom1"
-  subject.add new CRDT.Vector(atom, 1)
-  subject.remove new CRDT.Vector(atom, 1)
-  ok CRDT.include(subject.atoms(), atom), "subject atoms include atom1"
+subject = new CRDT.Set
+commute "adding atoms",
+  (-> subject.add new CRDT.Vector atom, 1)
+  (-> ok CRDT.include( subject.atoms(), atom), "subject atoms include atom1")
 
-test "atoms are enumerable", ->
-  subject = new CRDT.Set
-  atom = new CRDT.Atom "atom1"
-  atom2 = new CRDT.Atom "atom2"
-  subject.add new CRDT.Vector(atom, 1)
-  subject.add new CRDT.Vector(atom2, 1)
-  subject.remove new CRDT.Vector(atom, 2)
-  deepEqual subject.atoms(), [atom2], "correct atoms are in set"
+subject = new CRDT.Set
+commute "removes atoms",
+  (-> subject.add new CRDT.Vector(atom, 1))
+  (-> subject.remove new CRDT.Vector(atom, 2))
+  (-> ok not(CRDT.include(subject.atoms(), atom)), "atom removal commutes")
+
+subject = new CRDT.Set
+commute "ties go to addition",
+  (-> subject.add new CRDT.Vector(atom, 1))
+  (-> subject.remove new CRDT.Vector(atom, 1))
+  (-> ok CRDT.include( subject.atoms(), atom), "subject atoms include atom1")
+
+subject = new CRDT.Set
+commute "atoms are enumerable",
+  (-> subject.add new CRDT.Vector(atom, 1))
+  (-> subject.add new CRDT.Vector(atom2, 1))
+  (-> subject.remove new CRDT.Vector(atom, 2))
+  (-> deepEqual subject.atoms(), [atom2], "correct atoms are in set")
 

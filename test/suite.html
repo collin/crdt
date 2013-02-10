@@ -8,6 +8,7 @@
 <body>
   <div id="qunit"></div>
   <script src="../vendor/coffee-script.js"></script>
+  <script src="../vendor/underscore.js"></script>
   <script src="../vendor/qunit.js"></script>
 
   <script 
@@ -47,6 +48,57 @@
     module "Test Harness"
     test "Test Harness Runs", -> ok true, "Test Harness Runs"
   </script>
+
+
+<script type="text/javascript">
+function permutate(array, callback) {
+    // Do the actual permuation work on array[], starting at index
+    function p(array, index, callback) {
+        // Swap elements i1 and i2 in array a[]
+        function swap(a, i1, i2) {
+            var t = a[i1];
+            a[i1] = a[i2];
+            a[i2] = t;
+        }
+
+        // Are we at the last element of the array?                        
+        if (index == array.length - 1) {
+            // Nothing more to do - call the callback
+            callback(array);
+            // We have found a single permutation
+            return 1;
+        } else {
+            // Still work to do.
+            // Count the number of permutations to our right
+            var count = p(array, index + 1, callback);
+            // Swap the element at position index with
+            // each element to its right, permutate again,
+            // and swap back
+            for (var i = index + 1; i < array.length; i++) {
+                swap(array, i, index);
+                count += p(array, index + 1, callback);
+                swap(array, i, index);
+            }
+            return count;
+        }
+    }
+
+    // No data? Then no permutations!        
+    if (!array || array.length == 0) {
+        return 0;
+    }
+
+    // Start the permutation    
+    return p(array, 0, callback);
+}
+  function permutations(array) {
+    var all = [];
+    permutate(array, function(permutation){
+      all.push(permutation.slice(0));
+    });
+    return all;
+  }
+</script>
 
   <script type="text/coffeescript" src="crdt/between_test.js.coffee"></script>
   <script type="text/coffeescript" src="crdt/types/atom.js.coffee"></script>
