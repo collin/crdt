@@ -16,3 +16,6 @@ window.CRDT =
   include: (list, item) ->
     for other in list
       return true if item.equals(other)
+
+  max:  (list) -> Math.max.apply(null, list)
+  last: (list) -> list[ list.length ]

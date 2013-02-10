@@ -25,7 +25,7 @@ class CRDT.Hash extends CRDT.Set
 
   set: (keyString, vector) ->
     if detected = @get(keyString)
-      detected.atom.remove vector.child( detected.atom.value )
+      detected.atom.remove vector.child( detected.atom.value() )
       detected.atom.add vector
     else
       key = new CRDT.Hash.Key(keyString)
@@ -34,16 +34,16 @@ class CRDT.Hash extends CRDT.Set
       member.add vector
       @_add vector.child(member)
 
-    @cache(keyString)
+    @writeCache(keyString)
     vector
 
   get: (keyString) ->
     @cache[keyString]
 
-  delete: (keyString, clock=nil) ->
+  delete: (keyString, clock) ->
     return null unless member = @get(keyString)
     out = @_remove member.advanceClock(clock)
-    @cache(keyString)
+    @writeCache(keyString)
     out
 
   equals: (otherAtoms) ->
@@ -54,19 +54,25 @@ class CRDT.Hash extends CRDT.Set
 
   integrated: ->
     _cache = {}
-    for atom, clocks of @added.atoms()
-      continue if @removed.at(atom) && @removed.at(atom).first && max(@removed.at(atom)) > max(clocks)
-      if _cache[atom.key().value] && last(_cache[atom.key().value]) < max(clocks)
+    @added.atoms.forEach (atom, clocks) =>
+      return if @removed.at(atom) && @removed.at(atom).first && max(@removed.at(atom)) > max(clocks)
+      if _cache[atom.key()?.value] && last(_cache[atom.key().value]) < max(clocks)
         # I THINK SOMETHING HAS TO BE DONE HERE, WHO WINS?
         console.log 'NotHandle'
-      else if _cache[atom.key().value] && last(_cache[atom.key().value]) < max(clocks)
+      else if _cache[atom.key()?.value] && last(_cache[atom.key().value]) < max(clocks)
         _cache[atom.key().value] = [atom, max(clocks)]
-      else if not(_cache[atom.key().value])
-        _cache[atom.key().value] = [atom, max(clocks)]
-        
+      else if not(_cache[atom.key()?.value])
+        _cache[atom.key()?.value] = [atom, max(clocks)]
+      
+    console.log "integrated", _cache
     new CRDT.Vector(atom, clock) for X, [atom, clock] of _cache
 
   atoms: ->
     item.atom for item in @integrated()
-  
+
+  writeCache: (keyString) ->
+    key = new CRDT.Hash.Key(keyString)
+    @cache[keyString] = detect @integrated(), (vector) ->
+      vector.atom.key().equals(key)
+
 

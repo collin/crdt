@@ -1,6 +1,4 @@
-{max} = Math
-max = (list) -> Math.max.apply(null, list)
-last = (list) -> list[ list.length ]
+{max, last} = CRDT
 
 class CRDT.AtomSet
   constructor: ->

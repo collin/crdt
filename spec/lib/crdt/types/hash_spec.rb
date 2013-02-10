@@ -5,7 +5,7 @@ describe CRDT::Hash do
 
   subject { CRDT::Hash.new }
 
-  it("is an atom") { CRDT::Array.should < CRDT::Atom }
+  it("is an atom") { CRDT::Hash.should < CRDT::Atom }
 
   CONVERGANCE_COUNT = 10
 
