@@ -1,4 +1,4 @@
-{detect, equals, sort, include, max} = CRDT
+{detect, equals, sort, include, max, last} = CRDT
 
 class CRDT.Hash extends CRDT.Set
   @::add = undefined
@@ -24,6 +24,7 @@ class CRDT.Hash extends CRDT.Set
     @cache = new Object
 
   set: (keyString, vector) ->
+    @dirty()
     if detected = @get(keyString)
       detected.atom.remove vector.child( detected.atom.value() )
       detected.atom.add vector
@@ -55,7 +56,7 @@ class CRDT.Hash extends CRDT.Set
   integrated: ->
     _cache = {}
     @added.atoms.forEach (atom, clocks) =>
-      return if @removed.at(atom) && @removed.at(atom).first && max(@removed.at(atom)) > max(clocks)
+      return if @removed.at(atom) && @removed.at(atom)[0] && max(@removed.at(atom)) > max(clocks)
       if _cache[atom.key()?.value] && last(_cache[atom.key().value]) < max(clocks)
         # I THINK SOMETHING HAS TO BE DONE HERE, WHO WINS?
         console.log 'NotHandle'
@@ -64,7 +65,6 @@ class CRDT.Hash extends CRDT.Set
       else if not(_cache[atom.key()?.value])
         _cache[atom.key()?.value] = [atom, max(clocks)]
       
-    console.log "integrated", _cache
     new CRDT.Vector(atom, clock) for X, [atom, clock] of _cache
 
   atoms: ->

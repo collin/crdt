@@ -37,4 +37,4 @@ test "members show up if added and removed", ->
   subject.push new CRDT.Vector(atom, 2)
   deepEqual subject.atoms(), [atom]
 
-# TODO: test convergeance
+# TODO: test convergence

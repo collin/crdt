@@ -5,7 +5,8 @@ class CRDT.Vector
     new CRDT.Vector(atom, @clock)
 
   advanceClock: (clock) ->
-    new CRDT.Vector(@atom, clock || @clock + 1)
+    clock = @clock + 1 unless clock?
+    new CRDT.Vector(@atom, clock)
 
   equals: (other) ->
     return false unless other.constructor is CRDT.Vector
