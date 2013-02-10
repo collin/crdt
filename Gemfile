@@ -2,7 +2,9 @@ source "http://rubygems.org"
 
 gemspec
 
+
 group :development do
+  gem 'rake'
   gem 'rb-readline'
   gem 'hirb'
   gem 'eventmachine'
