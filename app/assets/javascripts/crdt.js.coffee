@@ -19,3 +19,12 @@ window.CRDT =
 
   max:  (list) -> Math.max.apply(null, list)
   last: (list) -> list[ list.length - 1]
+
+  flatten: (array, output=[]) ->
+    output = []
+    for item in array
+      if item.constructor is Array
+        Array::push.apply output, CRDT.flatten(item)
+      else
+        output.push(item)
+    output

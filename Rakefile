@@ -15,3 +15,8 @@ desc "run js tests"
 task "browser" do
   sh "phantomjs vendor/qunit-phantomjs-runner.js test/suite.html"
 end
+
+desc "push to github (run tests first)"
+task "push" do
+  sh "rake && rake browser && git push origin master"
+end
