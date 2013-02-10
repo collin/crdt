@@ -53,9 +53,7 @@ describe CRDT::Hash do
   end
 
   it "deletes items" do
-    value = atom1
-
-    subject["key"] = CRDT::Vector.new(value, 0)
+    subject["key"] = CRDT::Vector.new atom1, 0
     subject.delete "key"
     subject["key"].should == nil
   end
@@ -63,12 +61,33 @@ describe CRDT::Hash do
   it "lets inserts win" do
     subject["key"] = CRDT::Vector.new atom1, 0
     subject.delete "key", 0
-    subject["key"].atom.value.should == atom
+    subject["key"].atom.value.should == atom1
+  end
+
+  it "overwrites member values" do
+    subject["key"] = CRDT::Vector.new atom, 0
+    subject["key"] = CRDT::Vector.new atom1, 1
+    subject["key"].atom.value.should == atom1
   end
 
   converges("crazy hash ops", %w(key1 key2 key3 key4), 
     -> {
       [atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
+       atom, atom1, atom2, atom1, atom, atom1, atom,
        atom, atom1, atom2, atom1, atom, atom1, atom,
        atom, atom1, atom2, atom1, atom, atom1, atom,
        atom, atom1, atom2, atom1, atom, atom1, atom,

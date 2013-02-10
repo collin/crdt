@@ -41,26 +41,45 @@ class CRDT::Hash < CRDT::Set
     end
   end
 
+  def initialize
+    super
+    @cache = {}
+  end
+
   def []=(key_string, vector)
-    key = Key.new(key_string)
-    member = Member.new
-    member.add vector.child(key)
-    member.add vector
-    _add vector.child(member)
+    if detected = self[key_string]
+      detected.atom.remove vector.child(detected.atom.value)
+      detected.atom.add vector
+    else
+      key = Key.new(key_string)
+      member = Member.new
+      member.add vector.child(key)
+      member.add vector
+      _add vector.child(member)
+      vector
+    end
+
+    cache(key_string)
+
     vector
   end
 
   def [](key_string)
-    key = Key.new(key_string)
-    return nil unless detected = integrated.detect do |vector|
-      vector.atom.key == key
-    end
-    detected
+    @cache[key_string]
   end
 
   def delete(key, clock=nil)
     return nil unless member = self[key]
-    _remove member.advance_clock(clock)
+    out = _remove member.advance_clock(clock)
+    cache(key)
+    out
+  end
+
+  def cache(key_string)
+    key = Key.new(key_string)
+    @cache[key_string] = integrated.detect do |vector|
+      vector.atom.key == key
+    end
   end
 
   def ==(other_atoms)
@@ -72,19 +91,19 @@ class CRDT::Hash < CRDT::Set
   end
 
   def integrated
-    cache = {}
+    _cache = {}
     @added.atoms.each do |atom, clocks|
       next if @removed[atom] && @removed[atom].first && @removed[atom].max > clocks.max
-      if cache[atom.key.value] && cache[atom.key.value].last == clocks.max
+      if _cache[atom.key.value] && _cache[atom.key.value].last == clocks.max
         # I THINK SOMETHING HAS TO BE DONE HERE, WHO WINS?
-      elsif cache[atom.key.value] && cache[atom.key.value].last < clocks.max
-        cache[atom.key.value] = [atom, clocks.max] 
-      elsif !cache[atom.key.value]
-        cache[atom.key.value] = [atom, clocks.max] 
+        puts :NotHandle
+      elsif _cache[atom.key.value] && _cache[atom.key.value].last < clocks.max
+        _cache[atom.key.value] = [atom, clocks.max] 
+      elsif !_cache[atom.key.value]
+        _cache[atom.key.value] = [atom, clocks.max] 
       end
-
     end
-    cache.map do |_, (atom, clock)|
+    _cache.map do |_, (atom, clock)|
       CRDT::Vector.new(atom, clock)
     end
   end

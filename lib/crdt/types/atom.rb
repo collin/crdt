@@ -1,4 +1,5 @@
 require 'observer'
+require 'securerandom'
 class CRDT::Atom
   include Observable
 
@@ -6,10 +7,11 @@ class CRDT::Atom
 
   def initialize(value)
     @value = value
+    @id = SecureRandom.hex()[0,10]
   end
 
   def ==(other)
-    @value = other.value
+    @value == other.value
   end
 
   def observe(other)
@@ -17,7 +19,6 @@ class CRDT::Atom
   end
 
   def synchronize(operation, *args)
-    puts ["synchronize", self, operation, args].inspect
     send operation, *(args << false) # Don't rebroadcast
   end
 end

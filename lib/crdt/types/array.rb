@@ -45,8 +45,16 @@ class CRDT::Array < CRDT::Set
     end
   end
 
+
+  def slice!(start, length=1)
+    while length > 0
+      length -= 1
+      _remove at(start).advance_clock
+    end
+  end
+
   def push(vector)
-    insert vector, last, nil
+    _insert vector, last, nil
   end
 
   def pop
@@ -60,7 +68,7 @@ class CRDT::Array < CRDT::Set
   end
 
   def unshift(vector)
-    insert vector, nil, first
+    _insert vector, nil, first
   end
 
   def at(index)
@@ -73,7 +81,11 @@ class CRDT::Array < CRDT::Set
   def next(atom)
   end
 
-  def insert(vector, before, after)
+  def index(vector)
+    atoms.index(vector.atom)    
+  end
+
+  def _insert(vector, before, after)
     before = before ? before.atom.position.value : CRDT::Between::LOW
     after = after ? after.atom.position.value : CRDT::Between::HIGH
 

@@ -1,6 +1,13 @@
 require 'spec_helper'
 
+require 'method_profiler'
 describe CRDT::Array do
+  # before(:all) { @profiler = MethodProfiler.observe(described_class) }
+  # after(:all) { 
+  #   puts @profiler.report.sort_by(:total_time).order(:descending)
+  #   puts @profiler.report.sort_by(:total_calls).order(:descending)
+  # }
+
   include AtomSpecHelper
 
   CONVERGANCE_COUNT = 10
@@ -8,8 +15,8 @@ describe CRDT::Array do
   def self.converges(test, atoms, *operations)
     CONVERGANCE_COUNT.times do |iteration|
       it "#{test} ( converges iter-#{iteration}/#{CONVERGANCE_COUNT} )" do
-        subject1 = described_class.new
-        subject2 = described_class.new
+        subject1 = CRDT::Array.new
+        subject2 = CRDT::Array.new
 
         subject1.observe(subject2)
         subject2.observe(subject1)
@@ -21,7 +28,9 @@ describe CRDT::Array do
             method = subject.method(operation)
 
             # puts [operation, atom].inspect
-            if method.arity == 1
+            # puts operation.inspect
+            case operation
+            when :push, :unshift
               subject.send(operation, CRDT::Vector.new(atom, index))
             else
               subject.send(operation)
@@ -65,6 +74,79 @@ describe CRDT::Array do
      atom, atom1, atom2, atom1, atom, atom1, atom,
      atom, atom1, atom2, atom1, atom, atom1, atom,
      atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
+     atom, atom1, atom2, atom1, atom, atom1, atom,
      atom, atom1, atom2, atom1, atom, atom1, atom]
   }, :push, :pop, :shift, :unshift)
 
@@ -75,3 +157,4 @@ describe CRDT::Array do
     subject.should == [atom]
   end
 end
+
