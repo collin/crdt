@@ -58,3 +58,9 @@ class CRDT.SubDoc
       for item in value
         atom.push @begetVector(item, clock)
       atom
+    else if isObject value
+      atom = new CRDT.Hash
+      console.log "WHAT", atom
+      for key, _value of value
+        atom.set key, @begetVector(_value, clock)
+      atom

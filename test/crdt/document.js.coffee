@@ -67,7 +67,24 @@ test "remove from array", ->
   doc.at('list').set [0, 1, 2, 3, 4]
   doc.at('list', 3).remove()
   deepEqual doc.at('list').get(), [0, 1, 2, 4]
-  
+
+test "set a Hash value", ->
+  doc = new CRDT.Document
+  doc.at('o').set {}
+  deepEqual doc.at('o').get(), {}
+
+test "set a complex hash value", ->
+  complex =
+    key: "value"
+    list: ["some", ["lists"]]
+    crazy: [
+      "a crazy set of"
+      ["values", {with: ["so much", [{going:"on"}]]}]
+    ]
+  doc = new CRDT.Document
+  doc.at('o').set complex
+  deepEqual doc.at('o').get(), complex
+
 
 # test "at", ->
 #   doc = new CRDT.Document

@@ -91,4 +91,9 @@ class CRDT.Hash extends CRDT.Set
     @cache[keyString] = detect @integrated(), (vector) ->
       vector.atom.key().equals(key)
 
+  readValue: ->
+    value = {}
+    for atom in @atoms()
+      value[atom.key().readValue()] = atom.value().readValue()
+    value
 
