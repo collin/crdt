@@ -1,10 +1,10 @@
 {flatten} = CRDT
 
-isObject = (object) -> object is Object(object)
-isString = (object) -> toString.call(object) is "[object String]"
-isNumber = (object) -> toString.call(object) is "[object Number]"
+isObject  = (object) -> object is Object(object)
+isString  = (object) -> toString.call(object) is "[object String]"
+isNumber  = (object) -> toString.call(object) is "[object Number]"
 isBoolean = (object) -> toString.call(object) is "[object Boolean]"
-isArray = (object) -> toString.call(object) is "[object Array]"
+isArray   = (object) -> toString.call(object) is "[object Array]"
 class CRDT.Document extends CRDT.Hash
   constructor: (@id, @distributor, @clock=0) ->
     super
@@ -26,7 +26,7 @@ class CRDT.SubDoc
 
   set: (value, callback) ->
     [key, path...] = @path.slice(0).reverse()
-    atom = @readPath( path.reverse()... )
+    atom = @getAtom( path.reverse() )
     clock = @document.begetClock()
     vector = @begetVector(value, clock)
     atom.set(key, vector)
@@ -36,10 +36,19 @@ class CRDT.SubDoc
   del: (index, length, callback) ->
 
   remove: (callback) ->
+    [containerPath..., index] = @path
+    container = @getAtom(containerPath)
+    clock = @document.begetClock()
+    if container instanceof CRDT.Array
+      container.slice(index, 1, clock.clock)
 
   push: (value, callback) ->
+    atom = @getAtom( @path )
+    clock = @document.begetClock()
+    vector = @begetVector(value, clock)
+    atom.push(vector)
 
-  readPath: (path) -> @document.readPath(path)
+  getAtom: (path) -> @document.getAtom(path)
 
   begetVector: (value, clock) ->
     clock.child if isString(value) || isNumber(value) || isBoolean(value) || (value is null) || (value is undefined)

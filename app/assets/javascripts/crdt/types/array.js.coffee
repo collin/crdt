@@ -31,16 +31,24 @@ class CRDT.Array extends CRDT.Set
       else if @value < other.value
         -1
 
-  readPath: (head, tail...) ->
+  readPath: ([head, tail...]) ->
     if any tail
       @integrated()[head].readPath(tail)
+    else if head
+      @integrated()[head].atom.atom().readValue()
+    else
+      this
+
+  getAtom: ([head, tail...]) ->
+    if any tail
+      @integrated()[head].getAtom(tail)
     else if head
       @integrated()[head]
     else
       this
 
-  slice: (start=0, length=1) ->
-    @_remove @at(start).advanceClock() while length--
+  slice: (start=0, length=1, clock=null) ->
+    @_remove @integrated()[start].advanceClock(clock) while length--
 
   push: (vector) ->
     @_insert vector, @last(), null

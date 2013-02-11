@@ -23,13 +23,21 @@ class CRDT.Hash extends CRDT.Set
     super
     @cache = new Object
 
-  readPath: (head, tail...) ->
+  readPath: ([head, tail...]) ->
     if any tail
-      @get(head).readPath(tail)
+      @get(head).atom.value().readPath(tail)
     else if head
       @get(head).atom.value().readValue()
     else
      this
+
+  getAtom: ([head, tail...]) ->
+    if any tail
+      @get(head).atom.value().getAtom(tail)
+    else if head
+      @get(head).atom.value()
+    else
+     this    
 
   set: (keyString, vector) ->
     @dirty()

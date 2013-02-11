@@ -51,8 +51,23 @@ test "set an array with an array inside", ->
   doc.at('list').set ["item", ["inception?"]]
   deepEqual doc.at('list').get(), ["item", ["inception?"]]
 
+test "get at an array index", ->
+  doc = new CRDT.Document
+  doc.at('list').set [0, 1, 2, 3, 4]
+  deepEqual doc.at('list', 3).get(), 3
 
+test "push onto an array", ->
+  doc = new CRDT.Document
+  doc.at('list').set []
+  doc.at('list').push 33
+  deepEqual doc.at('list').get(), [33]
 
+test "remove from array", ->
+  doc = new CRDT.Document
+  doc.at('list').set [0, 1, 2, 3, 4]
+  doc.at('list', 3).remove()
+  deepEqual doc.at('list').get(), [0, 1, 2, 4]
+  
 
 # test "at", ->
 #   doc = new CRDT.Document

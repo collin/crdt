@@ -5,3 +5,5 @@ class CRDT.Atom
     @value is other.value
 
   readValue: -> @value
+
+  getAtom: -> this
