@@ -93,4 +93,6 @@ class CRDT.Array extends CRDT.Set
   atoms: ->
     vector.atom.atom() for vector in @integrated()
 
+  readValue: ->
+    atom.readValue() for atom in @atoms()
 

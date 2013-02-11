@@ -3,3 +3,5 @@ class CRDT.Atom
   
   equals: (other) ->
     @value is other.value
+
+  readValue: -> @value

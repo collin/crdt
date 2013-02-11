@@ -27,7 +27,7 @@ class CRDT.Hash extends CRDT.Set
     if any tail
       @get(head).readPath(tail)
     else if head
-      @get(head).atom.value().value
+      @get(head).atom.value().readValue()
     else
      this
 

@@ -36,6 +36,22 @@ test "overwrite value", ->
   doc.at('key').set "doggy"
   deepEqual doc.at('key').get(), "doggy"
 
+test "set an array value", ->
+  doc = new CRDT.Document
+  doc.at('list').set []
+  deepEqual doc.at('list').get(), []
+
+test "set an array value with data inside", ->
+  doc = new CRDT.Document
+  doc.at('list').set ["item"]
+  deepEqual doc.at('list').get(), ["item"]
+
+test "set an array with an array inside", ->
+  doc = new CRDT.Document
+  doc.at('list').set ["item", ["inception?"]]
+  deepEqual doc.at('list').get(), ["item", ["inception?"]]
+
+
 
 
 # test "at", ->
