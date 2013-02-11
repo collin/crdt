@@ -1,4 +1,4 @@
-{detect, equals, sort, include, max, last} = CRDT
+{detect, equals, sort, include, max, last, any} = CRDT
 
 class CRDT.Hash extends CRDT.Set
   @::add = undefined
@@ -23,6 +23,14 @@ class CRDT.Hash extends CRDT.Set
     super
     @cache = new Object
 
+  readPath: (head, tail...) ->
+    if any tail
+      @get(head).readPath(tail)
+    else if head
+      @get(head).atom.value().value
+    else
+     this
+
   set: (keyString, vector) ->
     @dirty()
     if detected = @get(keyString)
@@ -39,7 +47,7 @@ class CRDT.Hash extends CRDT.Set
     vector
 
   get: (keyString) ->
-    @cache[keyString]
+    @cache?[keyString]
 
   delete: (keyString, clock) ->
     return null unless member = @get(keyString)

@@ -18,7 +18,10 @@ window.CRDT =
       return true if item.equals(other)
 
   max:  (list) -> Math.max.apply(null, list)
+  
   last: (list) -> list[ list.length - 1]
+
+  any: (list) -> list.length > 0
 
   flatten: (array, output=[]) ->
     output = []

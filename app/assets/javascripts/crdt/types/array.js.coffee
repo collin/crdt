@@ -1,4 +1,4 @@
-{detect, equals, sort} = CRDT
+{detect, equals, sort, any} = CRDT
 
 class CRDT.Array extends CRDT.Set
   @::add = undefined
@@ -30,6 +30,14 @@ class CRDT.Array extends CRDT.Set
         0
       else if @value < other.value
         -1
+
+  readPath: (head, tail...) ->
+    if any tail
+      @integrated()[head].readPath(tail)
+    else if head
+      @integrated()[head]
+    else
+      this
 
   slice: (start=0, length=1) ->
     @_remove @at(start).advanceClock() while length--

@@ -2,14 +2,15 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>qunit CRDT</title>
-  <link rel="stylesheet" href="../vendor/qunit.css">
+  <title>QUnit CRDT</title>
+  <link rel="stylesheet" href="../vendor/QUnit.css">
 </head>
 <body>
   <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
   <script src="../vendor/coffee-script.js"></script>
   <script src="../vendor/underscore.js"></script>
-  <script src="../vendor/qunit.js"></script>
+  <script src="../vendor/QUnit.js"></script>
 
   <script 
     type="text/coffeescript" 
@@ -104,6 +105,12 @@ function permutate(array, callback) {
   }
 </script>
 
+  <script type="text/coffeescript">
+    QUnit.testStart ({name, module})-> 
+      console.time("#{module} - #{name}")
+    QUnit.testDone ({name, module})-> 
+      console.timeEnd("#{module} - #{name}")
+  </script>
   <script type="text/coffeescript" src="crdt.js.coffee"></script>
   <script type="text/coffeescript" src="crdt/document.js.coffee"></script>
   <script type="text/coffeescript" src="crdt/between_test.js.coffee"></script>
@@ -111,5 +118,6 @@ function permutate(array, callback) {
   <script type="text/coffeescript" src="crdt/types/set.js.coffee"></script>
   <script type="text/coffeescript" src="crdt/types/array.js.coffee"></script>
   <script type="text/coffeescript" src="crdt/types/hash.js.coffee"></script>
+
 </body>
 </html>
