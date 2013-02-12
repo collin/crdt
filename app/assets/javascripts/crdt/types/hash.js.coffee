@@ -26,7 +26,7 @@ class CRDT.Hash extends CRDT.Set
   readPath: ([head, tail...]) ->
     if any tail
       @get(head).atom.value().readPath(tail)
-    else if head
+    else if head?
       @get(head).atom.value().readValue()
     else
      this
@@ -34,7 +34,7 @@ class CRDT.Hash extends CRDT.Set
   getAtom: ([head, tail...]) ->
     if any tail
       @get(head).atom.value().getAtom(tail)
-    else if head
+    else if head?
       @get(head).atom.value()
     else
      this    

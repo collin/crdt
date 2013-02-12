@@ -32,9 +32,10 @@ class CRDT.Array extends CRDT.Set
         -1
 
   readPath: ([head, tail...]) ->
+    # THINK READ INTO THE LAST?
     if any tail
-      @integrated()[head].readPath(tail)
-    else if head
+      @integrated()[head].atom.atom().readPath(tail)
+    else if head?
       @integrated()[head].atom.atom().readValue()
     else
       this
@@ -42,7 +43,7 @@ class CRDT.Array extends CRDT.Set
   getAtom: ([head, tail...]) ->
     if any tail
       @integrated()[head].getAtom(tail)
-    else if head
+    else if head?
       @integrated()[head]
     else
       this

@@ -73,18 +73,24 @@ test "set a Hash value", ->
   doc.at('o').set {}
   deepEqual doc.at('o').get(), {}
 
+complex =
+  key: "value"
+  list: ["some", ["lists"]]
+  crazy: [
+    "a crazy set of"
+    ["values", {with: ["so much", [{going:"on"}]]}]
+  ]
 test "set a complex hash value", ->
-  complex =
-    key: "value"
-    list: ["some", ["lists"]]
-    crazy: [
-      "a crazy set of"
-      ["values", {with: ["so much", [{going:"on"}]]}]
-    ]
   doc = new CRDT.Document
   doc.at('o').set complex
   deepEqual doc.at('o').get(), complex
 
+test "read a complex hash value", ->
+  doc = new CRDT.Document
+  doc.at('o').set complex
+  subdoc = doc.at('o', 'crazy', 1, 1, 'with', 1, 0)
+  deepEqual subdoc.get(), {going:"on"}
+  deepEqual doc.at('o', 'crazy', 1, 1).get(), {with: ["so much", [{going:"on"}]]}
 
 # test "at", ->
 #   doc = new CRDT.Document

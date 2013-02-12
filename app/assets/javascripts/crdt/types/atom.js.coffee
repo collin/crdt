@@ -6,4 +6,6 @@ class CRDT.Atom
 
   readValue: -> @value
 
+  readPath: ->
+
   getAtom: -> this
